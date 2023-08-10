@@ -1,0 +1,9 @@
+{
+  "name": "text-graph.js",
+  "type": "module",
+  "license": "BSD-3",
+  "devDependencies": {
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6"
+  }
+}
