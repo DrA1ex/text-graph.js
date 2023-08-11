@@ -141,13 +141,19 @@ console.log(chartData);
 
 ### Single Series Chart
 
+<img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/a68f5175-34db-4462-8de2-649b60dd375b">
+
 Source code: [link](/examples/single.ts)
 
 ### Multi-line Series Chart 
 
+<img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/725b01bb-2bdb-47b8-b8e2-2728059000b1">
+
 Source code: [link](/examples/multi-series.ts)
 
 ### Dashboard
+
+<img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/483a9035-9ab2-4439-88eb-0a44171b0ebe">
 
 Source code: [link](/examples/dashboard.ts)
 ## License
