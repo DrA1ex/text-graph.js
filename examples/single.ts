@@ -1,5 +1,4 @@
-import {Plot} from "../src/plot";
-import {Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, PlotTilePositionFlags} from "../src/enum";
+import {Plot, Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, PlotTilePositionFlags} from "../src";
 
 // Define the plot options
 const plotOptions = {

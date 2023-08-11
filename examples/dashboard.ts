@@ -1,5 +1,4 @@
-import {Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow} from "../src/enum";
-import {MultiPlotChart} from "../src/multi-plot";
+import {MultiPlotChart, Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow} from "../src";
 
 const chart = new MultiPlotChart();
 

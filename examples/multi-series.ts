@@ -1,5 +1,4 @@
-import {Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, PlotTilePositionFlags} from "../src/enum";
-import {Plot} from "../src/plot";
+import {Plot, Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, PlotTilePositionFlags} from "../src";
 
 const plotOptions = {
     showAxis: true, // Show vertical axis

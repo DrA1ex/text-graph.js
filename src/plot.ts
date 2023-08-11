@@ -1,4 +1,11 @@
-import {BackgroundColor, Color, PlotAxisScale, PlotSeriesOverflow, PlotTilePositionFlags} from "./enum";
+import {
+    BackgroundColor,
+    Color,
+    PlotAxisScale,
+    PlotSeriesAggregationFn,
+    PlotSeriesOverflow,
+    PlotTilePositionFlags
+} from "./enum";
 import {Axis} from "./axis";
 import * as Utils from "./utils"
 
@@ -19,6 +26,21 @@ export type PlotOptions = {
     aggregation: Utils.AggregationFn,
 }
 
+export type PlotStaticOptions = {
+    width: number,
+    height: number
+} & PlotOptions;
+
+const PlotCtorDefaultOptions = {
+    width: 80,
+    height: 10,
+    showAxis: true,
+    axisScale: PlotAxisScale.linear,
+    title: "",
+    titlePosition: PlotTilePositionFlags.top,
+    horizontalBoundary: 0,
+}
+
 
 export type PlotSeriesConfig = {
     color: Color,
@@ -31,9 +53,9 @@ const PlotSeriesDefaults: PlotSeriesConfig = {
 }
 
 const PlotDefaultAggregation = {
-    [PlotAxisScale.linear]: Utils.aggregateAverage,
-    [PlotAxisScale.log]: Utils.aggregateMax,
-    [PlotAxisScale.logInverted]: Utils.aggregateMin,
+    [PlotAxisScale.linear]: PlotSeriesAggregationFn.mean,
+    [PlotAxisScale.log]: PlotSeriesAggregationFn.max,
+    [PlotAxisScale.logInverted]: PlotSeriesAggregationFn.min,
 } as { [key in PlotAxisScale]: Utils.AggregationFn }
 
 export class Plot {
@@ -60,12 +82,14 @@ export class Plot {
     readonly seriesConfigs: PlotSeriesConfig[] = [];
 
     constructor(
-        width = 80,
-        height = 10, {
-            showAxis = true, axisScale = PlotAxisScale.linear,
-            aggregation = PlotDefaultAggregation[axisScale] ?? Utils.aggregateSkip,
-            title = "", titlePosition = PlotTilePositionFlags.top,
-            horizontalBoundary = 0, verticalBoundary = title ? 1 : 0,
+        width = PlotCtorDefaultOptions.width, height = PlotCtorDefaultOptions.height, {
+            showAxis = PlotCtorDefaultOptions.showAxis,
+            axisScale = PlotCtorDefaultOptions.axisScale,
+            aggregation = PlotDefaultAggregation[axisScale] ?? PlotSeriesAggregationFn.skip,
+            title = PlotCtorDefaultOptions.title,
+            titlePosition = PlotCtorDefaultOptions.titlePosition,
+            horizontalBoundary = PlotCtorDefaultOptions.horizontalBoundary,
+            verticalBoundary = title ? 1 : 0,
         }: Partial<PlotOptions> = {}
     ) {
         this.width = width;
@@ -85,6 +109,19 @@ export class Plot {
         }
     }
 
+    static plot(
+        data: number[], plotOptions?: Partial<PlotStaticOptions>,
+        seriesOptions: Partial<PlotSeriesConfig> = {}
+    ): string {
+        const opts = {...PlotCtorDefaultOptions, ...plotOptions}
+        const p = new Plot(opts.width, opts.height, opts);
+
+        p.addSeries(seriesOptions);
+        p.addSeriesRange(0, data);
+
+        return p.paint();
+    }
+
     public addSeries(options: Partial<PlotSeriesConfig> = {}) {
         this.series.push([])
         this.seriesConfigs.push({...PlotSeriesDefaults, ...options});
@@ -95,6 +132,11 @@ export class Plot {
     public addSeriesEntry(seriesIndex: number, value: number) {
         if (seriesIndex >= this.series.length) throw new Error("Wrong series index");
         this.series[seriesIndex].push(value);
+    }
+
+    public addSeriesRange(seriesIndex: number, data: number[]) {
+        if (seriesIndex >= this.series.length) throw new Error("Wrong series index");
+        this.series[seriesIndex].push(...data);
     }
 
     public redraw() {
@@ -247,7 +289,7 @@ export class Plot {
     }
 
     private _skipDistribution(_: number, max: number, count: number): Iterable<number> {
-        return Utils.linearDistribution(max - count, max, count);
+        return Utils.linearDistribution(max - count + 1, max, count);
     }
 
     private* _invertedLogDistribution(data: number[], min: number, max: number, count: number): Iterable<number> {

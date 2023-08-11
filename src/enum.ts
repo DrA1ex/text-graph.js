@@ -52,7 +52,7 @@ export enum PlotAxisScale {
 
 export const PlotSeriesAggregationFn = {
     mean: Utils.aggregateAverage,
-    min: Utils.aggregateMax,
-    max: Utils.aggregateMin,
+    min: Utils.aggregateMin,
+    max: Utils.aggregateMax,
     skip: Utils.aggregateSkip,
 } as const;
