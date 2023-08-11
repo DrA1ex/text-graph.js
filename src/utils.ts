@@ -1,5 +1,7 @@
 export type DistributionFn = (min: number, max: number, count: number) => Iterable<number>
 
+export type AggregationFn = (data: number[], from: number, to: number) => number;
+
 export function toFixed(value: number, maxFraction = 2) {
     let label = value.toFixed(maxFraction)
     const pointIndex = label.indexOf(".")
@@ -68,8 +70,12 @@ export function* logDistribution(min: number, max: number, count: number, ratio:
 
     ratio = Math.max(0, Math.min(1, ratio));
     for (let i = 0; i < count; i++) {
-        const linearValue = i / (count - 1); // Linear distribution value between 0 and 1
-        const logarithmicValue = Math.pow(10, linearValue) / 10; // Logarithmic distribution value between 0 and 1
+        // Linear distribution value between 0 and 1
+        const linearValue = i / (count - 1);
+
+        // Logarithmic distribution value between 0 and 1
+        // Special case is i=0, since 10^0 = 1, and so we get 0.1 and thus skip `min` border
+        const logarithmicValue = i > 0 ? Math.pow(10, linearValue) / 10 : 0;
 
         // Applying ratio to interpolate between linear and logarithmic distributions
         const interpolatedValue = (1 - ratio) * linearValue + ratio * logarithmicValue;
@@ -93,4 +99,87 @@ export function* invertedLogDistribution(min: number, max: number, count: number
         prev = value;
         last += delta;
     }
+}
+
+export function aggregateAverage(data: number[], from: number, to: number): number {
+    if (from >= to) return data[to];
+
+    const length = to - from + 1;
+    let value = 0;
+    for (let i = from; i <= to; i++) {
+        value += data[i] / length;
+    }
+
+    return value;
+}
+
+export function aggregateMax(data: number[], from: number, to: number): number {
+    if (from >= to) return data[to];
+
+    let value = data[from];
+    for (let i = from; i <= to; i++) {
+        value = Math.max(value, data[i]);
+    }
+
+    return value;
+}
+
+export function aggregateMin(data: number[], from: number, to: number): number {
+    if (from >= to) return data[to];
+
+    let value = data[from];
+    for (let i = from; i <= to; i++) {
+        value = Math.min(value, data[i]);
+    }
+
+    return value;
+}
+
+export function aggregateSkip(data: number[], from: number, to: number) {
+    return data[to];
+}
+
+export function shrinkData(data: number[], maxLength: number, distributionFn: DistributionFn, aggregationFn: AggregationFn) {
+    if (data.length <= maxLength) return data;
+    const shrunk = new Array(maxLength);
+
+    let i = 0;
+    let prevIndex;
+    for (let index of distributionFn(0, data.length - 1, maxLength)) {
+        index = Math.round(index);
+        if (prevIndex === undefined) prevIndex = index;
+
+        shrunk[i++] = aggregationFn(data, prevIndex, index);
+        prevIndex = index + 1;
+    }
+
+    return shrunk;
+}
+
+export function findClosestIndexSorted(data: number[], value: number): number {
+    let index = 0;
+    let left = 0;
+    let right = data.length - 1;
+
+    while (left <= right) {
+        index = left + Math.floor((right - left) / 2);
+        const current = data[index];
+
+        if (value < current) {
+            right = index - 1;
+        } else if (value > current) {
+            left = index + 1;
+        } else {
+            return index;
+        }
+    }
+
+    //value is outside [min; max] range
+    if (left === 0 || left >= data.length) {
+        return index;
+    }
+
+    const lowerDiff = Math.abs(data[left - 1] - value);
+    const upperDiff = Math.abs(data[left] - value);
+    return lowerDiff < upperDiff ? left - 1 : left;
 }

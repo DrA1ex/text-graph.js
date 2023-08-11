@@ -1,3 +1,5 @@
+import * as Utils from "./utils"
+
 export enum PlotTilePositionFlags {
     top = 0,
     bottom = 1 << 1,
@@ -47,3 +49,10 @@ export enum PlotAxisScale {
     log,
     logInverted
 }
+
+export const PlotSeriesAggregationFn = {
+    mean: Utils.aggregateAverage,
+    min: Utils.aggregateMax,
+    max: Utils.aggregateMin,
+    skip: Utils.aggregateSkip,
+} as const;

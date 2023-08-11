@@ -27,27 +27,7 @@ export class Axis {
     }
 
     getPosition(value: number) {
-        let index = 0;
-        let left = 0;
-        let right = this.size - 1;
-
-        while (left <= right) {
-            index = left + Math.floor((right - left) / 2);
-
-            const axisValue = this.labels[index];
-            if (value < axisValue) {
-                right = index - 1;
-            } else if (value > axisValue) {
-                left = index + 1;
-            } else {
-                break;
-            }
-        }
-
-        if (index > 0 && value < this.labels[index]) {
-            index--
-        }
-
+        const index = Utils.findClosestIndexSorted(this.labels, value);
         return this.size - 1 - index;
     }
 }

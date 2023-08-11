@@ -15,19 +15,26 @@ export type PlotOptions = {
     verticalBoundary: number
     title: string,
     titlePosition: PlotTilePositionFlags,
-    axisScale: PlotAxisScale
+    axisScale: PlotAxisScale,
+    aggregation: Utils.AggregationFn,
 }
 
 
 export type PlotSeriesConfig = {
     color: Color,
-    overflow: PlotSeriesOverflow,
+    overflow: PlotSeriesOverflow
 }
 
 const PlotSeriesDefaults: PlotSeriesConfig = {
     color: Color.default,
-    overflow: PlotSeriesOverflow.linearScale,
+    overflow: PlotSeriesOverflow.linearScale
 }
+
+const PlotDefaultAggregation = {
+    [PlotAxisScale.linear]: Utils.aggregateAverage,
+    [PlotAxisScale.log]: Utils.aggregateMax,
+    [PlotAxisScale.logInverted]: Utils.aggregateMin,
+} as { [key in PlotAxisScale]: Utils.AggregationFn }
 
 export class Plot {
     static readonly AxisSymbol = "┼"
@@ -37,6 +44,7 @@ export class Plot {
     static readonly ChartVertical = ["│", "╭", "╰",];
 
     public showAxis: boolean;
+    public aggregationFn: Utils.AggregationFn;
     public axisScale: PlotAxisScale;
     public horizontalBoundary: number;
     public verticalBoundary: number;
@@ -55,8 +63,9 @@ export class Plot {
         width = 80,
         height = 10, {
             showAxis = true, axisScale = PlotAxisScale.linear,
+            aggregation = PlotDefaultAggregation[axisScale] ?? Utils.aggregateSkip,
             title = "", titlePosition = PlotTilePositionFlags.top,
-            horizontalBoundary = 0, verticalBoundary = 0,
+            horizontalBoundary = 0, verticalBoundary = title ? 1 : 0,
         }: Partial<PlotOptions> = {}
     ) {
         this.width = width;
@@ -64,6 +73,7 @@ export class Plot {
 
         this.showAxis = showAxis;
         this.axisScale = axisScale;
+        this.aggregationFn = aggregation;
         this.title = title;
         this.titlePosition = titlePosition;
         this.horizontalBoundary = horizontalBoundary;
@@ -223,44 +233,20 @@ export class Plot {
 
         switch (overflow) {
             case PlotSeriesOverflow.linearScale:
-                return this._shrinkData(data, maxLength, Utils.linearDistribution);
+                return Utils.shrinkData(data, maxLength, Utils.linearDistribution, this.aggregationFn);
 
             case PlotSeriesOverflow.logScale:
-                return this._shrinkData(data, maxLength, this._invertedLogDistribution.bind(this, data));
+                return Utils.shrinkData(data, maxLength, this._invertedLogDistribution.bind(this, data), this.aggregationFn);
+
+            case PlotSeriesOverflow.skip:
+                return Utils.shrinkData(data, maxLength, this._skipDistribution.bind(this), this.aggregationFn);
 
             default:
-                return this._shrinkData(data, maxLength, this._skipDistribution.bind(this));
+                throw new Error(`Unsupported overflow function: ${overflow}`);
         }
     }
 
-    private _shrinkData(data: number[], maxLength: number, fn: Utils.DistributionFn) {
-        if (data.length <= maxLength) return data;
-        const shrunk = new Array(maxLength);
-
-        let i = 0;
-        let prevIndex = 0;
-        for (let index of fn(0, data.length - 1, maxLength)) {
-            index = Math.round(index);
-            shrunk[i++] = this._aggregateData(data, prevIndex, index);
-
-            prevIndex = index;
-        }
-
-        return shrunk;
-    }
-
-    private _aggregateData(data: number[], from: number, to: number): number {
-        if (from >= to) return data[to];
-
-        let value = data[from];
-        for (let i = from; i <= to; i++) {
-            value = Math.max(value, data[i]);
-        }
-
-        return value;
-    }
-
-    private _skipDistribution(min: number, max: number, count: number): Iterable<number> {
+    private _skipDistribution(_: number, max: number, count: number): Iterable<number> {
         return Utils.linearDistribution(max - count, max, count);
     }
 
