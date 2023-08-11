@@ -156,6 +156,75 @@ Source code: [link](/examples/multi-series.ts)
 <img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/483a9035-9ab2-4439-88eb-0a44171b0ebe">
 
 Source code: [link](/examples/dashboard.ts)
+
+### Snippets
+
+#### Fast plot drawing
+
+```javascript
+const data = new Array(200);
+for (let i = 0; i < data.length; i++) {
+    data[i] = Math.sin(0.3 * i) * Math.cos(0.6 * i) - Math.sin(i * Math.PI / 50) * Math.abs(i - 100) / 30
+}
+
+console.log(Plot.plot(data));
+```
+
+<img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/96f221b5-756b-4568-a55a-89c298d7d7d5">
+
+#### Axis scale
+
+```javascript
+const data = new Array(300);
+for (let i = 0; i < data.length; i++) {
+    data[i] = Math.sin(0.3 * i) * Math.cos(0.6 * i) - Math.sin(i * Math.PI / 50) * Math.abs(i - 100) / 30
+}
+
+console.log(Plot.plot(data, {axisScale: PlotAxisScale.log}));
+```
+
+<img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/56d636ec-e0ed-471b-8084-f003f74e9aa1">
+
+#### Series scale on overflow
+
+```javascript
+const data = new Array(300);
+for (let i = 0; i < data.length; i++) {
+    data[i] = Math.sin(0.3 * i) * Math.cos(0.6 * i) - Math.sin(i * Math.PI / 50) * Math.abs(i - 100) / 30
+}
+
+console.log(Plot.plot(data, {}, {overflow: PlotSeriesOverflow.logScale}));
+```
+
+<img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/252139a7-2502-4b71-ba5f-917d8fcfeb9f">
+
+#### Series color
+
+```javascript
+const data = new Array(300);
+for (let i = 0; i < data.length; i++) {
+    data[i] = Math.sin(0.3 * i) * Math.cos(0.6 * i) - Math.sin(i * Math.PI / 50) * Math.abs(i - 100) / 30
+}
+
+console.log(Plot.plot(data, {}, {color: Color.green}));
+```
+
+<img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/f3d1cc85-d595-4230-8151-e6aaf9b74a2e">
+
+#### Different height
+
+```javascript
+const data = new Array(200);
+for (let i = 0; i < data.length; i++) {
+    data[i] = Math.sin(0.3 * i) * Math.cos(0.6 * i) - Math.sin(i * Math.PI / 50) * Math.abs(i - 100) / 30
+}
+
+console.log(Plot.plot(data, {height: 5}));
+```
+
+<img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/4189112f-6498-482f-a491-e3f161a2863a">
+
+
 ## License
 
 `text-graph.js` is released under the [BSD-3-Clause License](/LICENSE).
