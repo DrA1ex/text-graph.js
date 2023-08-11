@@ -41,7 +41,7 @@ export enum BackgroundColor {
 export enum PlotSeriesOverflow {
     linearScale,
     logScale,
-    skip,
+    clamp,
 }
 
 export enum PlotAxisScale {

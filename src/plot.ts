@@ -238,7 +238,7 @@ export class Plot {
             case PlotSeriesOverflow.logScale:
                 return Utils.shrinkData(data, maxLength, this._invertedLogDistribution.bind(this, data), this.aggregationFn);
 
-            case PlotSeriesOverflow.skip:
+            case PlotSeriesOverflow.clamp:
                 return Utils.shrinkData(data, maxLength, this._skipDistribution.bind(this), this.aggregationFn);
 
             default:

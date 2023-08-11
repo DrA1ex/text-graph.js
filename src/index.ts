@@ -6,4 +6,5 @@ export default {
     MultiPlotChart
 }
 
-export {Color, PlotAxisScale, PlotSeriesOverflow, PlotTilePositionFlags} from "./enum"
+export {Plot, MultiPlotChart}
+export {Color, PlotAxisScale, PlotSeriesOverflow, PlotTilePositionFlags, PlotSeriesAggregationFn} from "./enum"

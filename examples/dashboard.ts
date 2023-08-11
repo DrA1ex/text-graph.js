@@ -1,5 +1,5 @@
-import {Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow} from "../enum";
-import {MultiPlotChart} from "../multi-plot";
+import {Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow} from "../src/enum";
+import {MultiPlotChart} from "../src/multi-plot";
 
 const chart = new MultiPlotChart();
 
@@ -18,7 +18,7 @@ chart.addPlot({xOffset: 42, yOffset: 16, width: 60, height: 15}, {
     aggregation: PlotSeriesAggregationFn.mean
 });
 
-chart.addPlotSeries(0, {color: Color.red, overflow: PlotSeriesOverflow.skip});
+chart.addPlotSeries(0, {color: Color.red, overflow: PlotSeriesOverflow.clamp});
 chart.addPlotSeries(1, {color: Color.blue, overflow: PlotSeriesOverflow.linearScale});
 chart.addPlotSeries(2, {color: Color.yellow});
 

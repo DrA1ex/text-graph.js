@@ -22,6 +22,8 @@ export function minMax(values: number[]): [number, number] {
     let min = Number.POSITIVE_INFINITY;
 
     for (const value of values) {
+        if (Number.isNaN(value)) continue;
+
         min = Math.min(min, value);
         max = Math.max(max, value);
     }
@@ -35,6 +37,7 @@ export function minMax2d(values: number[][]): [number, number] {
 
     for (const row of values) {
         const [localMin, localMax] = minMax(row);
+        if (!Number.isFinite(localMin)) continue;
 
         min = Math.min(min, localMin);
         max = Math.max(max, localMax);

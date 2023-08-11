@@ -3,9 +3,9 @@
     "target": "es2020",
     "module": "es2020",
     "lib": [
-      "es2020",
-      "dom"
+      "es2020"
     ],
+    "allowJs": true,
     "moduleResolution": "node",
     "rootDir": "src",
     "outDir": "lib",
@@ -16,12 +16,13 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "sourceMap": false,
     "declaration": true,
     "downlevelIteration": true,
     "importHelpers": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "./src/**/*.ts",
-    "./examples/**/*.ts"
   ]
 }

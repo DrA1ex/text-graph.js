@@ -2,8 +2,14 @@
   "name": "text-graph.js",
   "type": "module",
   "license": "BSD 3-Clause",
+  "scripts": {
+    "build": "webpack && cp ./README.md ./lib/ && cp ./LICENSE ./lib/"
+  },
   "devDependencies": {
     "tsx": "^3.12.7",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "ts-loader": "^9.4.4",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   }
 }
