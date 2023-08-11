@@ -1,0 +1,30 @@
+{
+  "name": "text-graph.js",
+  "version": "1.0.1",
+  "main": "index.js",
+  "type": "module",
+  "author": "DrA1ex",
+  "description": "A versatile JavaScript library for creating ASCII charts in the terminal and browser console",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DrA1ex/text-graph.js.git"
+  },
+  "homepage": "https://github.com/DrA1ex/text-graph.js",
+  "keywords": [
+    "ascii-chart",
+    "terminal-chart",
+    "console-chart",
+    "browser-chart",
+    "chart-library",
+    "multi-series-chart",
+    "chart-dashboard",
+    "text-graph",
+    "data-visualization",
+    "javascript-graph",
+    "ascii-visualization",
+    "dashboard-library",
+    "text-based-chart",
+    "text-based-visualization"
+  ],
+  "license": "BSD-3-Clause"
+}
