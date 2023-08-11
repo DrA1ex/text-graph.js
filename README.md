@@ -1,5 +1,9 @@
 # text-graph.js
 
+<p align="center">
+<img alt="animation" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/d6b28cfe-0892-496a-8489-603c210d4a5e">
+</p>
+
 `text-graph.js` is a JavaScript/TypeScript library that allows you to create charts in the terminal and browser console.
 It provides functionality to generate line charts and create a dashboard with multiple charts.
 
