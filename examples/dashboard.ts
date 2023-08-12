@@ -1,5 +1,4 @@
-import {Color, MultiPlotChart, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow} from "../src";
-import {BackgroundColor} from "../src/enum";
+import {Color, BackgroundColor, MultiPlotChart, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow} from "../src";
 
 const chart = new MultiPlotChart({
     title: "Dashboard chart",

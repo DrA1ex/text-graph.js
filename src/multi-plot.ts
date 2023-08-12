@@ -28,10 +28,21 @@ const MultiPlotOptionsDefaults = {
 }
 
 export class MultiPlotChart {
+    get title(): string {
+        return this._title;
+    }
+
+    set title(value: string) {
+        const needDrawTitleChanged = !!value !== !!this._title;
+        this._title = value;
+
+        this._updateScreen();
+    }
+
     public width: number = 0;
     public height: number = 0;
 
-    public title: string;
+    private _title: string;
     public titlePosition: LabelPositionFlags;
     public titleForeground: Color;
     public titleBackground: BackgroundColor;
@@ -46,7 +57,7 @@ export class MultiPlotChart {
     constructor(options: Partial<MultiPlotOptionsT> = {}) {
         const opts = {...MultiPlotOptionsDefaults, ...options};
 
-        this.title = opts.title;
+        this._title = opts.title;
         this.titlePosition = opts.titlePosition;
         this.titleForeground = opts.titleForeground;
         this.titleBackground = opts.titleBackground;
@@ -59,22 +70,7 @@ export class MultiPlotChart {
         this.plots.push(plot);
         this.configs.set(plot, config);
 
-        let width = 0, height = 0;
-        for (const conf of this.configs.values()) {
-            width = Math.max(width, conf.xOffset + conf.width);
-            height = Math.max(height, conf.yOffset + conf.height);
-        }
-
-        if (this.title) {
-            height += this.titleBoundary;
-        }
-
-        this.width = width;
-        this.height = height;
-        this.screen = new Array(height);
-        for (let i = 0; i < height; i++) {
-            this.screen[i] = new Array(width).fill(Plot.SpaceSymbol);
-        }
+        this._updateScreen();
 
         return this.plots.length - 1;
     }
@@ -94,7 +90,7 @@ export class MultiPlotChart {
     public redraw() {
         if (this.title) {
             const titleLabel = new Label(
-                this.title, this.width, this.height, 0, LabelPositionFlags.top, this.titleSpacing
+                this.title, this.width, this.height, 0, this.titlePosition, this.titleSpacing
             );
 
             titleLabel.foregroundColor = this.titleForeground;
@@ -103,7 +99,7 @@ export class MultiPlotChart {
         }
 
         const xGlobalOffset = 0;
-        const yGlobalOffset = this.title ? this.titleBoundary : 0;
+        const yGlobalOffset = this.title && this.titlePosition & LabelPositionFlags.top ? this.titleBoundary : 0;
 
         for (const plot of this.plots) {
             this._drawPlot(plot, xGlobalOffset, yGlobalOffset);
@@ -119,6 +115,25 @@ export class MultiPlotChart {
     private _assertChartId(id: number) {
         if (id >= this.plots.length) {
             throw new Error("Wrong chart id");
+        }
+    }
+
+    private _updateScreen() {
+        let width = 0, height = 0;
+        for (const conf of this.configs.values()) {
+            width = Math.max(width, conf.xOffset + conf.width);
+            height = Math.max(height, conf.yOffset + conf.height);
+        }
+
+        if (this.title) {
+            height += this.titleBoundary;
+        }
+
+        this.width = width;
+        this.height = height;
+        this.screen = new Array(height);
+        for (let i = 0; i < height; i++) {
+            this.screen[i] = new Array(width).fill(Plot.SpaceSymbol);
         }
     }
 

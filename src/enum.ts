@@ -1,10 +1,10 @@
 import * as Utils from "./utils"
 
 export enum LabelPositionFlags {
-    top = 0,
-    bottom = 1 << 1,
-    left = 1 << 4,
-    right = 1 << 5,
+    top = 1 << 1,
+    bottom = 1 << 2,
+    left = 1 << 5,
+    right = 1 << 6,
 
     top_left = top | left,
     top_right = top | right,
