@@ -1,5 +1,6 @@
-import {Color} from "./enum";
+import {BackgroundColor, Color, LabelPositionFlags} from "./enum";
 import {Plot, PlotOptions, PlotSeriesConfig} from "./plot";
+import {Label, LabelDefaults} from "./label";
 
 type ChartPlotConfig = {
     xOffset: number,
@@ -8,14 +9,50 @@ type ChartPlotConfig = {
     height: number,
 };
 
+type MultiPlotOptionsT = {
+    title: string,
+    titlePosition: LabelPositionFlags,
+    titleForeground: Color,
+    titleBackground: BackgroundColor,
+    titleBoundary: number,
+    titleSpacing: number,
+}
+
+const MultiPlotOptionsDefaults = {
+    title: "",
+    titlePosition: LabelDefaults.align,
+    titleForeground: LabelDefaults.foregroundColor,
+    titleBackground: LabelDefaults.backgroundColor,
+    titleBoundary: 1,
+    titleSpacing: LabelDefaults.spacing,
+}
+
 export class MultiPlotChart {
     public width: number = 0;
     public height: number = 0;
+
+    public title: string;
+    public titlePosition: LabelPositionFlags;
+    public titleForeground: Color;
+    public titleBackground: BackgroundColor;
+    public titleBoundary: number;
+    public titleSpacing: number;
 
     public readonly plots: Plot[] = [];
     private readonly configs = new Map<Plot, ChartPlotConfig>();
 
     public screen!: string[][];
+
+    constructor(options: Partial<MultiPlotOptionsT> = {}) {
+        const opts = {...MultiPlotOptionsDefaults, ...options};
+
+        this.title = opts.title;
+        this.titlePosition = opts.titlePosition;
+        this.titleForeground = opts.titleForeground;
+        this.titleBackground = opts.titleBackground;
+        this.titleBoundary = opts.titleBoundary;
+        this.titleSpacing = opts.titleSpacing;
+    }
 
     public addPlot(config: ChartPlotConfig, options?: Partial<PlotOptions>): number {
         const plot = new Plot(config.width, config.height, options);
@@ -26,6 +63,10 @@ export class MultiPlotChart {
         for (const conf of this.configs.values()) {
             width = Math.max(width, conf.xOffset + conf.width);
             height = Math.max(height, conf.yOffset + conf.height);
+        }
+
+        if (this.title) {
+            height += this.titleBoundary;
         }
 
         this.width = width;
@@ -51,8 +92,21 @@ export class MultiPlotChart {
     }
 
     public redraw() {
+        if (this.title) {
+            const titleLabel = new Label(
+                this.title, this.width, this.height, 0, LabelPositionFlags.top, this.titleSpacing
+            );
+
+            titleLabel.foregroundColor = this.titleForeground;
+            titleLabel.backgroundColor = this.titleBackground;
+            titleLabel.draw(this.screen, 0, 0);
+        }
+
+        const xGlobalOffset = 0;
+        const yGlobalOffset = this.title ? this.titleBoundary : 0;
+
         for (const plot of this.plots) {
-            this._drawPlot(plot);
+            this._drawPlot(plot, xGlobalOffset, yGlobalOffset);
         }
     }
 
@@ -68,7 +122,7 @@ export class MultiPlotChart {
         }
     }
 
-    private _drawPlot(plot: Plot) {
+    private _drawPlot(plot: Plot, xGlobalOffset: number, yGlobalOffset: number) {
         const config = this.configs.get(plot)!;
         const {xOffset, yOffset} = config;
 
@@ -76,7 +130,7 @@ export class MultiPlotChart {
         for (let y = 0; y < plot.screen.length; y++) {
             const row = plot.screen[y];
             for (let x = 0; x < row.length; x++) {
-                this.screen[y + yOffset][x + xOffset] = row[x];
+                this.screen[y + yOffset + yGlobalOffset][x + xOffset + xGlobalOffset] = row[x];
             }
         }
     }

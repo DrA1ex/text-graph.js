@@ -1,9 +1,9 @@
-import {Plot, Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, PlotTilePositionFlags} from "../src";
+import {Plot, Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, LabelPositionFlags} from "../src";
 
 const plotOptions = {
     showAxis: true, // Show vertical axis
     title: "Multi-Series Demo", // Title of the chart
-    titlePosition: PlotTilePositionFlags.top, // Position of the title
+    titlePosition: LabelPositionFlags.top, // Position of the title
     axisScale: PlotAxisScale.linear, // Scale of the axis
     aggregation: PlotSeriesAggregationFn.mean, // Aggregation type for data points
 };

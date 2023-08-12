@@ -1,6 +1,13 @@
-import {MultiPlotChart, Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow} from "../src";
+import {Color, MultiPlotChart, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow} from "../src";
+import {BackgroundColor} from "../src/enum";
 
-const chart = new MultiPlotChart();
+const chart = new MultiPlotChart({
+    title: "Dashboard chart",
+    titleBoundary: 2,
+    titleSpacing: 8,
+    titleForeground: Color.blue,
+    titleBackground: BackgroundColor.black,
+});
 
 chart.addPlot({xOffset: 0, yOffset: 0, width: 40, height: 31}, {
     title: "overflow: skip",

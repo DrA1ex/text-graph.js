@@ -1,4 +1,4 @@
-import {Plot, Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, PlotTilePositionFlags} from "../src";
+import {Plot, Color, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, LabelPositionFlags} from "../src";
 
 // Define the plot options
 const plotOptions = {
@@ -6,7 +6,7 @@ const plotOptions = {
     horizontalBoundary: 0,
     verticalBoundary: 1,
     title: 'Sample Line Chart',
-    titlePosition: PlotTilePositionFlags.top,
+    titlePosition: LabelPositionFlags.top,
     axisScale: PlotAxisScale.linear,
     aggregation: PlotSeriesAggregationFn.skip,
 };

@@ -72,7 +72,7 @@ To use `text-graph.js`, follow these steps:
 
 ```javascript
 import {
-    Plot, PlotTilePositionFlags, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, Color
+    Plot, LabelPositionFlags, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, Color, BackgroundColor, 
 } from 'text-graph.js';
 ```
 
@@ -84,7 +84,10 @@ const plotOptions = {
     title: 'Chart Title',
     horizontalBoundary: 1,
     verticalBoundary: 2,
-    titlePosition: PlotTilePositionFlags.top,
+    titlePosition: LabelPositionFlags.top,
+    titleForeground: Color.blue,
+    titleBackground: BackgroundColor.black,
+    axisLabelsFraction: 4,
     axisScale: PlotAxisScale.linear,
     aggregation: PlotSeriesAggregationFn.mean,
 }

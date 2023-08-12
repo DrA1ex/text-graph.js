@@ -1,6 +1,6 @@
 import * as Utils from "./utils"
 
-export enum PlotTilePositionFlags {
+export enum LabelPositionFlags {
     top = 0,
     bottom = 1 << 1,
     left = 1 << 4,
@@ -28,6 +28,7 @@ export enum Color {
 }
 
 export enum BackgroundColor {
+    black = "\x1b[40m",
     red = "\x1b[41m",
     green = "\x1b[42m",
     yellow = "\x1b[43m",

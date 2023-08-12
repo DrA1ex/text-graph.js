@@ -1,13 +1,13 @@
 import {
-    BackgroundColor,
     Color,
     PlotAxisScale,
     PlotSeriesAggregationFn,
     PlotSeriesOverflow,
-    PlotTilePositionFlags
+    LabelPositionFlags, BackgroundColor
 } from "./enum";
 import {Axis} from "./axis";
 import * as Utils from "./utils"
+import {Label, LabelDefaults} from "./label";
 
 enum States {
     straight = 0,
@@ -21,9 +21,13 @@ export type PlotOptions = {
     horizontalBoundary: number
     verticalBoundary: number
     title: string,
-    titlePosition: PlotTilePositionFlags,
+    titlePosition: LabelPositionFlags,
+    titleForeground: Color,
+    titleBackground: BackgroundColor,
+    titleSpacing: number,
     axisScale: PlotAxisScale,
     aggregation: Utils.AggregationFn,
+    axisLabelsFraction: number
 }
 
 export type PlotStaticOptions = {
@@ -31,14 +35,18 @@ export type PlotStaticOptions = {
     height: number
 } & PlotOptions;
 
-const PlotCtorDefaultOptions = {
+export const PlotCtorDefaultOptions = {
     width: 80,
     height: 10,
     showAxis: true,
     axisScale: PlotAxisScale.linear,
     title: "",
-    titlePosition: PlotTilePositionFlags.top,
+    titlePosition: LabelDefaults.align,
+    titleForeground: LabelDefaults.foregroundColor,
+    titleBackground: LabelDefaults.backgroundColor,
+    titleSpacing: LabelDefaults.spacing,
     horizontalBoundary: 0,
+    axisLabelsFraction: 2,
 }
 
 
@@ -70,8 +78,12 @@ export class Plot {
     public axisScale: PlotAxisScale;
     public horizontalBoundary: number;
     public verticalBoundary: number;
+    public axisLabelsFraction: number;
     public title: string;
-    public titlePosition: PlotTilePositionFlags;
+    public titlePosition: LabelPositionFlags;
+    public titleForeground: Color;
+    public titleBackground: BackgroundColor;
+    public titleSpacing: number;
 
     public readonly width;
     public readonly height;
@@ -88,8 +100,12 @@ export class Plot {
             aggregation = PlotDefaultAggregation[axisScale] ?? PlotSeriesAggregationFn.skip,
             title = PlotCtorDefaultOptions.title,
             titlePosition = PlotCtorDefaultOptions.titlePosition,
+            titleForeground = PlotCtorDefaultOptions.titleForeground,
+            titleBackground = PlotCtorDefaultOptions.titleBackground,
+            titleSpacing = PlotCtorDefaultOptions.titleSpacing,
             horizontalBoundary = PlotCtorDefaultOptions.horizontalBoundary,
             verticalBoundary = title ? 1 : 0,
+            axisLabelsFraction = PlotCtorDefaultOptions.axisLabelsFraction,
         }: Partial<PlotOptions> = {}
     ) {
         this.width = width;
@@ -98,10 +114,16 @@ export class Plot {
         this.showAxis = showAxis;
         this.axisScale = axisScale;
         this.aggregationFn = aggregation;
+
         this.title = title;
         this.titlePosition = titlePosition;
+        this.titleForeground = titleForeground;
+        this.titleBackground = titleBackground;
+        this.titleSpacing = titleSpacing;
+
         this.horizontalBoundary = horizontalBoundary;
         this.verticalBoundary = verticalBoundary;
+        this.axisLabelsFraction = axisLabelsFraction;
 
         this.screen = new Array(this.height);
         for (let i = 0; i < this.height; i++) {
@@ -194,7 +216,12 @@ export class Plot {
             }
         }
 
-        this._drawTitle(xOffset);
+        const titleLabel = new Label(
+            this.title, this.width, this.height, this.horizontalBoundary, this.titlePosition, this.titleSpacing
+        );
+        titleLabel.foregroundColor = this.titleForeground;
+        titleLabel.backgroundColor = this.titleBackground;
+        titleLabel.draw(this.screen, xOffset, 0);
     }
 
     public paint(): string {
@@ -206,8 +233,8 @@ export class Plot {
     private _drawAxis(yOffset: number, axisValues: number[]) {
         const size = axisValues.length;
         const labelPadding = Math.max(
-            Math.abs(axisValues[0]).toFixed(2).length,
-            Math.abs(axisValues[size - 1]).toFixed(2).length) + 1;
+            Math.abs(axisValues[0]).toFixed(this.axisLabelsFraction).length,
+            Math.abs(axisValues[size - 1]).toFixed(this.axisLabelsFraction).length) + 1;
 
         for (let i = 0; i < this.height; i++) {
             const index = this.height - 1 - i;
@@ -216,7 +243,7 @@ export class Plot {
             const labelIndex = i - yOffset;
             if (labelIndex >= 0 && labelIndex < size) {
                 const axisValue = axisValues[labelIndex];
-                const label = Utils.toFixed(axisValue, 2).padStart(labelPadding, " ");
+                const label = Utils.toFixed(axisValue, this.axisLabelsFraction).padStart(labelPadding, " ");
 
                 for (let j = 0; j < label.length; j++) {
                     this.screen[index][j] = Color.default + label[j];
@@ -225,43 +252,6 @@ export class Plot {
         }
 
         return labelPadding;
-    }
-
-    private _drawTitle(plotOffset: number) {
-        const maxWidth = this.width - plotOffset;
-        if (!this.title || maxWidth <= 4) return;
-
-        let label = this._clipLabel(this.title, maxWidth, this.horizontalBoundary);
-
-        let x;
-        if (this.titlePosition & PlotTilePositionFlags.left) {
-            x = 0
-        } else if (this.titlePosition & PlotTilePositionFlags.right) {
-            x = this.width - label.length - 1;
-        } else {
-            x = plotOffset + Math.round(maxWidth / 2 - label.length / 2)
-        }
-
-        if (label.length < maxWidth - 2) {
-            label = ` ${label} `;
-        }
-
-        let y = 0;
-        if (this.titlePosition & PlotTilePositionFlags.bottom) {
-            y = this.height - 1;
-        }
-
-        for (let i = 0; i < label.length; i++) {
-            this.screen[y][x + i] = BackgroundColor.lightgray + Color.black + label[i] + Color.reset;
-        }
-    }
-
-    private _clipLabel(label: string, maxLength: number, boundary: number): string {
-        if (label.length > maxLength) {
-            return label.slice(0, maxLength - boundary - 1) + "…";
-        }
-
-        return label
     }
 
     private _clear() {
