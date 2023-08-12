@@ -157,6 +157,12 @@ Source code: [link](/examples/multi-series.ts)
 
 Source code: [link](/examples/dashboard.ts)
 
+### Neural network training dashboard
+
+<img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/5b5da127-4a32-4f88-9759-1bb796dda928">
+
+Project: [link](https://github.com/DrA1ex/mind-net.js)
+
 ### Snippets
 
 #### Fast plot drawing
