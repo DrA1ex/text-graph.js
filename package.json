@@ -1,6 +1,6 @@
 {
   "name": "text-graph.js",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "DrA1ex",
   "description": "A versatile JavaScript library for creating ASCII charts in the terminal and browser console",
   "repository": {
