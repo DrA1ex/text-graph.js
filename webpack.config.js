@@ -40,6 +40,9 @@ export default {
         filename: '[name].js',
         library: {
             type: "module"
+        },
+        clean: {
+            keep: /package\.json/
         }
     },
 };

@@ -186,3 +186,15 @@ export function findClosestIndexSorted(data: number[], value: number): number {
     const upperDiff = Math.abs(data[left] - value);
     return lowerDiff < upperDiff ? left - 1 : left;
 }
+
+export function zoomData(data: number[], maxLength: number): number[] {
+    if (data.length === 0 && data.length >= maxLength) return data;
+
+    const zoomed = new Array(maxLength);
+    let outIndex = 0;
+    for (const zoomedIndex of linearDistribution(0, data.length - 1, maxLength)) {
+        zoomed[outIndex++] = data[Math.round(zoomedIndex)];
+    }
+
+    return zoomed;
+}

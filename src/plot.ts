@@ -27,7 +27,8 @@ export type PlotOptions = {
     titleSpacing: number,
     axisScale: PlotAxisScale,
     aggregation: Utils.AggregationFn,
-    axisLabelsFraction: number
+    axisLabelsFraction: number,
+    zoom: boolean,
 }
 
 export type PlotStaticOptions = {
@@ -47,6 +48,7 @@ export const PlotCtorDefaultOptions = {
     titleSpacing: LabelDefaults.spacing,
     horizontalBoundary: 0,
     axisLabelsFraction: 2,
+    zoom: false
 }
 
 
@@ -84,6 +86,7 @@ export class Plot {
     public titleForeground: Color;
     public titleBackground: BackgroundColor;
     public titleSpacing: number;
+    public zoom: boolean;
 
     public readonly width;
     public readonly height;
@@ -106,6 +109,7 @@ export class Plot {
             horizontalBoundary = PlotCtorDefaultOptions.horizontalBoundary,
             verticalBoundary = title ? 1 : 0,
             axisLabelsFraction = PlotCtorDefaultOptions.axisLabelsFraction,
+            zoom = PlotCtorDefaultOptions.zoom,
         }: Partial<PlotOptions> = {}
     ) {
         this.width = width;
@@ -114,6 +118,7 @@ export class Plot {
         this.showAxis = showAxis;
         this.axisScale = axisScale;
         this.aggregationFn = aggregation;
+        this.zoom = zoom;
 
         this.title = title;
         this.titlePosition = titlePosition;
@@ -180,7 +185,8 @@ export class Plot {
             if (this.series[i].length <= 1) continue;
 
             const {color, overflow} = this.seriesConfigs[i];
-            const data = this._handleOverflow(this.series[i], overflow, maxSeriesLength);
+            const seriesData = this.zoom ? Utils.zoomData(this.series[i], maxSeriesLength) : this.series[i];
+            const data = this._handleOverflow(seriesData, overflow, maxSeriesLength);
 
             let lastState = States.straight;
             let lastY = yOffset + axis.getPosition(data[0]);

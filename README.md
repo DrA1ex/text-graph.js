@@ -88,8 +88,9 @@ const plotOptions = {
     titleBackground: BackgroundColor.black,
     axisLabelsFraction: 4,
     axisScale: PlotAxisScale.linear,
-    aggregation: PlotSeriesAggregationFn.mean
-};
+    aggregation: PlotSeriesAggregationFn.mean,
+    zoom: false,
+}
 ```
 
 3. Create a plot instance:
