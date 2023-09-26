@@ -1,15 +1,40 @@
 {
   "name": "text-graph.js",
+  "version": "1.1.0",
+  "main": "index.js",
   "type": "module",
-  "license": "BSD 3-Clause",
+  "author": "DrA1ex",
+  "description": "A versatile JavaScript library for creating ASCII charts in the terminal and browser console",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DrA1ex/text-graph.js.git"
+  },
+  "homepage": "https://github.com/DrA1ex/text-graph.js",
+  "keywords": [
+    "ascii-chart",
+    "terminal-chart",
+    "console-chart",
+    "browser-chart",
+    "chart-library",
+    "multi-series-chart",
+    "chart-dashboard",
+    "text-graph",
+    "data-visualization",
+    "javascript-graph",
+    "ascii-visualization",
+    "dashboard-library",
+    "text-based-chart",
+    "text-based-visualization"
+  ],
+  "license": "BSD-3-Clause",
   "scripts": {
-    "build": "webpack && cp ./README.md ./lib/ && cp ./LICENSE ./lib/"
+    "bundle": "rm -rf ./lib/ && tsc --project tsconfig.lib.json && esbuild src/index.ts --bundle --format=esm --outdir=./lib",
+    "build": "npm run bundle && cp ./package.json ./README.md ./LICENSE ./lib"
   },
   "devDependencies": {
-    "tsx": "^3.12.7",
-    "typescript": "^5.1.6",
+    "esbuild": "^0.19.3",
     "ts-loader": "^9.4.4",
-    "webpack": "^5.88.2",
-    "webpack-cli": "^5.1.4"
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6"
   }
 }
