@@ -6,6 +6,8 @@
 
 `text-graph.js` is a compact and easy-to-use JavaScript/TypeScript library. It lets you create charts in the terminal and browser console. You can make line charts and build a dashboard with multiple charts, all without any extarnal dependencies. It has features for different axis and data scaling methods. Plus, it supports adding colors to your charts.
 
+[![npm version](https://badge.fury.io/js/text-graph.js.svg)](https://badge.fury.io/js/text-graph.js)
+
 ## Features
 
 - Create line charts
