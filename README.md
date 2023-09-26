@@ -202,6 +202,16 @@ console.log(Plot.plot(data, {axisScale: PlotAxisScale.log}));
 
 <img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/56d636ec-e0ed-471b-8084-f003f74e9aa1">
 
+#### Series data zoom
+
+```javascript
+const data = [1, 2, 3]
+console.log(Plot.plot(data, {zoom: true}));
+```
+
+<img width="800" src="https://github.com/DrA1ex/text-graph.js/assets/1194059/3d2ba01f-cd7c-406b-80ee-71c6d0e69ed9">
+
+
 #### Series scale on overflow
 
 ```javascript
