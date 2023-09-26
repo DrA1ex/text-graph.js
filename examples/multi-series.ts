@@ -6,7 +6,6 @@ const plotOptions = {
     titlePosition: LabelPositionFlags.top, // Position of the title
     axisScale: PlotAxisScale.linear, // Scale of the axis
     aggregation: PlotSeriesAggregationFn.mean, // Aggregation type for data points
-    zoom: true
 };
 
 const plot = new Plot(80, 20, plotOptions);
