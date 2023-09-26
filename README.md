@@ -71,7 +71,7 @@ To use `text-graph.js`, follow these steps:
 
 ```javascript
 import {
-    Plot, LabelPositionFlags, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, Color, BackgroundColor, 
+    Plot, LabelPositionFlags, PlotAxisScale, PlotSeriesAggregationFn, PlotSeriesOverflow, Color, BackgroundColor 
 } from 'text-graph.js';
 ```
 
@@ -88,8 +88,8 @@ const plotOptions = {
     titleBackground: BackgroundColor.black,
     axisLabelsFraction: 4,
     axisScale: PlotAxisScale.linear,
-    aggregation: PlotSeriesAggregationFn.mean,
-}
+    aggregation: PlotSeriesAggregationFn.mean
+};
 ```
 
 3. Create a plot instance:
@@ -105,12 +105,12 @@ const plot = new Plot(width, height, plotOptions);
 ```javascript
 const plotSeriesConfig1 = {
     color: Color.cyan,
-    overflow: PlotSeriesOverflow.logScale,
+    overflow: PlotSeriesOverflow.logScale
 };
 
 const plotSeriesConfig2 = {
     color: Color.magenta,
-    overflow: PlotSeriesOverflow.clamp,
+    overflow: PlotSeriesOverflow.clamp
 };
 ```
 
@@ -121,7 +121,7 @@ const seriesId1 = plot.addSeries(plotSeriesConfig1);
 const seriesId2 = plot.addSeries(plotSeriesConfig2);
 ```
 
-6. Iterate over your data and update the plot:
+6. Option 1: Iterate over your data and update the plot:
 
 ```javascript
 const data1 = [1, 2, 3];
@@ -133,9 +133,17 @@ const data2 = [0, -1, -2];
 for (const value of data2) {
     plot.addSeriesEntry(seriesId2, value);
 }
+```
 
+6. Option 2: Populate all data to the plot:
+```javascript 
+plot.addSeriesRange(seriesId1, [1, 2, 3]);
+plot.addSeriesRange(seriesId2, [0, -1, -2]);
+```
+
+7. Display the plot:
+```javascript
 const chartData = plot.paint();
-console.clear()
 console.log(chartData);
 ```
 
