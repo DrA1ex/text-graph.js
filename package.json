@@ -1,8 +1,6 @@
 {
   "name": "text-graph.js",
   "version": "1.1.0",
-  "main": "index.js",
-  "type": "module",
   "author": "DrA1ex",
   "description": "A versatile JavaScript library for creating ASCII charts in the terminal and browser console",
   "repository": {
@@ -28,13 +26,25 @@
   ],
   "license": "BSD-3-Clause",
   "scripts": {
-    "bundle": "rm -rf ./lib/ && tsc --project tsconfig.lib.json && esbuild src/index.ts --bundle --format=esm --outdir=./lib",
-    "build": "npm run bundle && cp ./package.json ./README.md ./LICENSE ./lib"
+    "bundle_esm": "esbuild src/index.ts --bundle --format=esm --outdir=./lib --out-extension:.js=.mjs",
+    "bundle_cjs": "esbuild src/index.ts --bundle --format=cjs --outdir=./lib --out-extension:.js=.js",
+    "bundle": "rm -rf ./lib/ && tsc --project tsconfig.lib.json && npm run bundle_esm && npm run bundle_cjs",
+    "build": "npm run bundle && cp ./README.md ./LICENSE ./lib"
   },
   "devDependencies": {
     "esbuild": "^0.19.3",
     "ts-loader": "^9.4.4",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6"
+  },
+  "main": "./lib/index.js",
+  "module": "./lib/index.mjs",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./lib/index.js",
+      "import": "./lib/index.mjs",
+      "types": "./lib/index.d.ts"
+    }
   }
 }
